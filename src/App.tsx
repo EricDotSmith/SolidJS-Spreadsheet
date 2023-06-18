@@ -1,29 +1,68 @@
-import { For, type Component, createSignal, createEffect } from "solid-js";
+import { For, type Component, createSignal, createEffect, createContext, JSX, useContext } from "solid-js";
 import { createStore } from "solid-js/store";
 
 const App: Component = () => {
-  return <Sheet />;
+  return (
+    <SpreadsheetProvider>
+      <Sheet />
+    </SpreadsheetProvider>
+  );
 };
 
 const ROWS = 4;
 const COLUMNS = 4;
 
-const [cells, setCells] = createStore<string[][]>(new Array(ROWS).fill(new Array(COLUMNS).fill("")));
-const [atom, setAtoms] = createStore<string[]>(new Array(ROWS * COLUMNS).fill(""));
+interface SpreadsheetProviderContextState {
+  cells: string[][];
+  cellValues: string[];
+  cellValuesComputed: string[];
+  updateCellValue: (index: number, value: string) => void;
+  updateCellValueComputed: (index: number, value: string) => void;
+}
 
-const updateAtom = (index: number, value: string) => {
-  setAtoms(index, value);
+export const SpreadsheetContext = createContext<SpreadsheetProviderContextState>({} as SpreadsheetProviderContextState);
+
+const SpreadsheetProvider: Component<{ children: JSX.Element }> = (props) => {
+  const [cells, setCells] = createStore<string[][]>(new Array(ROWS).fill(new Array(COLUMNS).fill("")));
+  const [cellValues, setCellValues] = createStore<string[]>(new Array(ROWS * COLUMNS).fill(""));
+  const [cellValuesComputed, setCellValuesComputed] = createStore<string[]>(new Array(ROWS * COLUMNS).fill(""));
+
+  const updateCellValue = (index: number, value: string) => {
+    setCellValues(index, value);
+  };
+
+  const updateCellValueComputed = (index: number, value: string) => {
+    setCellValuesComputed(index, value);
+  };
+
+  return (
+    <SpreadsheetContext.Provider
+      value={{
+        cells,
+        cellValues,
+        cellValuesComputed,
+        updateCellValue,
+        updateCellValueComputed,
+      }}
+    >
+      {props.children}
+    </SpreadsheetContext.Provider>
+  );
+};
+
+const useSpreadsheetContext = () => {
+  const context = useContext(SpreadsheetContext);
+
+  return context;
 };
 
 const Sheet: Component = () => {
-  const [n, setN] = createSignal(4);
+  const { cells } = useSpreadsheetContext();
   return (
     <div class="">
-      <button onClick={() => setN(n() + 1)}>add</button>
-      {n()}
-      <ColumnHeaders columns={n()} />
+      <ColumnHeaders columns={cells[0].length} />
       <div class="flex">
-        <RowHeaders rows={n()} />
+        <RowHeaders rows={cells.length} />
         {/* naming of rowIndex and colIndex mixed up I think */}
         <For each={cells}>
           {(row, colIndex) => (
@@ -42,18 +81,19 @@ interface CellProps {
   column: number;
 }
 const Cell: Component<CellProps> = (props) => {
+  const { cells, cellValues, updateCellValue } = useSpreadsheetContext();
   const cellIndex = (cells.length - 1) * props.row + (props.column + props.row);
   createEffect(() => {
-    console.log("rendering cell: ", cellIndex, ":", atom[cellIndex]);
+    console.log("rendering cell: ", cellIndex, ":", cellValues[cellIndex]);
   });
   return (
     <div
       onClick={() => {
-        updateAtom(cellIndex, "hey");
+        updateCellValue(cellIndex, "hey");
       }}
       class="bg-gray-100 border-gray-700 flex border min-w-[8rem] h-6 items-center justify-center"
     >
-      I: {cellIndex} : {props.row} : {props.column} : {atom[cellIndex]}
+      I: {cellIndex} : {props.row} : {props.column} : {cellValues[cellIndex]}
     </div>
   );
 };
