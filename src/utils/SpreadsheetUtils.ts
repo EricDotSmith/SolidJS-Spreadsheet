@@ -6,7 +6,7 @@ export const COLUMNS = 4;
 
 // Converts header uppercase letter to column number
 // Ex: A => 0, B => 1, C => 2, ..., Z => 25, AA => 26, AB => 27, ...
-function convertLetterCodeToNumber(letterCode: string): number {
+export function convertLetterCodeToNumber(letterCode: string): number {
   const base = "A".charCodeAt(0) - 1;
   let result = 0;
 
@@ -22,7 +22,7 @@ function convertLetterCodeToNumber(letterCode: string): number {
 
 // Returns the row and column of a cell given its code
 // Ex: A1 => [0, 0], B2 => [1, 1], C3 => [2, 2], ...
-function getRowColumnFromCellCode(cellCode: string): { row: number; column: number } | undefined {
+export function getRowColumnFromCellCode(cellCode: string): { row: number; column: number } | undefined {
   //split the cell code into letters and numbers
   const regex = /([A-Z]+)(\d+)/g;
   const match = regex.exec(cellCode);
@@ -42,7 +42,7 @@ function getRowColumnFromCellCode(cellCode: string): { row: number; column: numb
 export const getCellIndex = (row: number, column: number) => (COLUMNS - 1) * row + (column + row);
 
 // Returns the value of the cell for the given cell code
-function getCellValueFromCellCode(cellCode: string, cellValues: string[]): string | undefined {
+export function getCellValueFromCellCode(cellCode: string, cellValues: string[]): string | undefined {
   const cell = getRowColumnFromCellCode(cellCode);
 
   if (!cell) {
@@ -57,7 +57,7 @@ function getCellValueFromCellCode(cellCode: string, cellValues: string[]): strin
 }
 
 // Replaces the cell codes in the expression with the evaluated cell values
-function replaceCellCodesWithEvaluatedCellValues(expression: string, evaluatedCellValues: string[]): string {
+export function replaceCellCodesWithEvaluatedCellValues(expression: string, evaluatedCellValues: string[]): string {
   const regex = /([A-Z]+)(\d+)/g;
 
   return expression.replace(regex, (_, letters: string, numbers: string) => {
