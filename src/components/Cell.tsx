@@ -1,6 +1,6 @@
 import { Component, createSignal, createEffect, onCleanup, onMount, Show, createMemo } from "solid-js";
 import { useSpreadsheetContext } from "./SpreadsheetProvider";
-import { evaluateExpression, getCellIndex } from "../utils/SpreadsheetUtils";
+import { COLUMNS, evaluateExpression, getCellIndex } from "../utils/SpreadsheetUtils";
 
 interface CellProps {
   row: number;
@@ -11,14 +11,14 @@ const Cell: Component<CellProps> = (props) => {
   const [showInput, setShowInput] = createSignal(false);
   const { cellValues, cellValuesComputed, updateCellValue, updateCellValueComputed } = useSpreadsheetContext();
 
-  const cellIndex = getCellIndex(props.row, props.column);
+  const cellIndex = getCellIndex(props.row, props.column, COLUMNS);
 
   let inputRef: HTMLInputElement | undefined = undefined;
 
   const evaluateCellValue = (value: string) => {
     if (value.startsWith("=")) {
       const expression = value.substring(1).toUpperCase();
-      const evaluatedExpression = evaluateExpression(expression, cellValuesComputed);
+      const evaluatedExpression = evaluateExpression(expression, cellValuesComputed, COLUMNS);
 
       updateCellValueComputed(cellIndex, evaluatedExpression);
 

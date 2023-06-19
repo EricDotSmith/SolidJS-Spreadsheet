@@ -1,4 +1,5 @@
 import { Component, createSignal, createEffect, For } from "solid-js";
+import { generateLetterSequence } from "../utils/SpreadsheetUtils";
 
 interface ColumnHeadersProps {
   columns: number;
@@ -7,7 +8,7 @@ const ColumnHeaders: Component<ColumnHeadersProps> = (props) => {
   const [list, setList] = createSignal<string[]>([]);
 
   createEffect(() => {
-    setList(new Array(props.columns).fill("").map((_, i) => String.fromCharCode(65 + i)));
+    setList(generateLetterSequence(props.columns));
   });
 
   return (

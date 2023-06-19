@@ -1,11 +1,14 @@
 import { describe, expect, test } from "@jest/globals";
 import {
   convertLetterCodeToNumber,
+  generateLetterSequence,
   getCellIndex,
   getCellValueFromCellCode,
   getRowColumnFromCellCode,
   replaceCellCodesWithEvaluatedCellValues,
 } from "../utils/SpreadsheetUtils";
+
+const totalColumns = 4;
 
 describe("Spreadsheet utils (execution engine)", () => {
   test("convertLetterCodeToNumber produces correct column indexes for letter code", () => {
@@ -35,10 +38,10 @@ describe("Spreadsheet utils (execution engine)", () => {
   });
 
   test("getCellIndex produces correct index for row and column", () => {
-    const idxA1 = getCellIndex(0, 0);
-    const idxA2 = getCellIndex(1, 0);
-    const idxD4 = getCellIndex(3, 3);
-    const idxB1 = getCellIndex(0, 1);
+    const idxA1 = getCellIndex(0, 0, totalColumns);
+    const idxA2 = getCellIndex(1, 0, totalColumns);
+    const idxD4 = getCellIndex(3, 3, totalColumns);
+    const idxB1 = getCellIndex(0, 1, totalColumns);
 
     expect(idxA1).toBe(0);
     expect(idxA2).toBe(4);
@@ -49,10 +52,10 @@ describe("Spreadsheet utils (execution engine)", () => {
   test("getCellValueFromCellCode produces correct cell value for cell code", () => {
     const cellValues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"];
 
-    const valueA1 = getCellValueFromCellCode("A1", cellValues);
-    const valueA2 = getCellValueFromCellCode("A2", cellValues);
-    const valueB1 = getCellValueFromCellCode("B1", cellValues);
-    const valueD4 = getCellValueFromCellCode("D4", cellValues);
+    const valueA1 = getCellValueFromCellCode("A1", cellValues, totalColumns);
+    const valueA2 = getCellValueFromCellCode("A2", cellValues, totalColumns);
+    const valueB1 = getCellValueFromCellCode("B1", cellValues, totalColumns);
+    const valueD4 = getCellValueFromCellCode("D4", cellValues, totalColumns);
 
     expect(valueA1).toBe("1");
     expect(valueA2).toBe("5");
@@ -73,8 +76,24 @@ describe("Spreadsheet utils (execution engine)", () => {
     const expression = "(A2*    A1) + D3 / B1 / C1 - A1";
     const expectedExpression = "(5*    1) + 12 / 2 / 3 - 1";
 
-    const evaluatedExpression = replaceCellCodesWithEvaluatedCellValues(expression, cellValues);
+    const evaluatedExpression = replaceCellCodesWithEvaluatedCellValues(expression, cellValues, totalColumns);
 
     expect(evaluatedExpression).toBe(expectedExpression);
+  });
+
+  test("generateLetterSequence produces correct letter sequence for number of columns", () => {
+    const totalColumns = 25000;
+
+    const letterSequence = generateLetterSequence(totalColumns);
+
+    expect(letterSequence[0]).toBe("A");
+    expect(letterSequence[25]).toBe("Z");
+    expect(letterSequence[26]).toBe("AA");
+    expect(letterSequence[27]).toBe("AB");
+    expect(letterSequence[51]).toBe("AZ");
+    expect(letterSequence[52]).toBe("BA");
+    expect(letterSequence[53]).toBe("BB");
+    expect(letterSequence[701]).toBe("ZZ");
+    expect(letterSequence[totalColumns - 1]).toBe("AJYN");
   });
 });

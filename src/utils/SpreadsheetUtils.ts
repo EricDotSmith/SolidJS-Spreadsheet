@@ -1,10 +1,10 @@
 import { evaluate } from "mathjs";
 
-const ROWCOLSIZE = 50;
+const rowAndColLength = 50;
 
 // As of right now these must be a square
-export const ROWS = ROWCOLSIZE;
-export const COLUMNS = ROWCOLSIZE;
+export const ROWS = rowAndColLength;
+export const COLUMNS = rowAndColLength;
 
 // Converts header uppercase letter to column number
 // Ex: A => 0, B => 1, C => 2, ..., Z => 25, AA => 26, AB => 27, ...
@@ -41,10 +41,15 @@ export function getRowColumnFromCellCode(cellCode: string): { row: number; colum
 }
 
 // Maps the row and column number to the index of the cell in the array
-export const getCellIndex = (row: number, column: number) => (COLUMNS - 1) * row + (column + row);
+export const getCellIndex = (row: number, column: number, totalColumns: number) =>
+  (totalColumns - 1) * row + (column + row);
 
 // Returns the value of the cell for the given cell code
-export function getCellValueFromCellCode(cellCode: string, cellValues: string[]): string | undefined {
+export function getCellValueFromCellCode(
+  cellCode: string,
+  cellValues: string[],
+  totalColumns: number
+): string | undefined {
   const cell = getRowColumnFromCellCode(cellCode);
 
   if (!cell) {
@@ -53,27 +58,35 @@ export function getCellValueFromCellCode(cellCode: string, cellValues: string[])
 
   const { row, column } = cell;
 
-  const cellValue = cellValues[getCellIndex(row, column)];
+  const cellValue = cellValues[getCellIndex(row, column, totalColumns)];
 
   return cellValue;
 }
 
 // Replaces the cell codes in the expression with the evaluated cell values
-export function replaceCellCodesWithEvaluatedCellValues(expression: string, evaluatedCellValues: string[]): string {
+export function replaceCellCodesWithEvaluatedCellValues(
+  expression: string,
+  evaluatedCellValues: string[],
+  totalColumns: number
+): string {
   const regex = /([A-Z]+)(\d+)/g;
 
   return expression.replace(regex, (_, letters: string, numbers: string) => {
     const code = letters.toUpperCase() + numbers;
 
-    const value = getCellValueFromCellCode(code, evaluatedCellValues);
+    const value = getCellValueFromCellCode(code, evaluatedCellValues, totalColumns);
 
     return value !== undefined ? String(value) : code;
   });
 }
 
 // Evaluates the expression and returns the result
-export function evaluateExpression(expression: string, cellValues: string[]): string {
-  const expressionWithEvaluatedCellValues = replaceCellCodesWithEvaluatedCellValues(expression, cellValues);
+export function evaluateExpression(expression: string, cellValues: string[], totalColumns: number): string {
+  const expressionWithEvaluatedCellValues = replaceCellCodesWithEvaluatedCellValues(
+    expression,
+    cellValues,
+    totalColumns
+  );
 
   try {
     const result = evaluate(expressionWithEvaluatedCellValues);
@@ -82,4 +95,21 @@ export function evaluateExpression(expression: string, cellValues: string[]): st
   } catch (error) {
     return "#ERROR";
   }
+}
+
+// Generates the letter sequence for the spreadsheet header
+export function generateLetterSequence(totalColumns: number) {
+  const letters = [];
+
+  for (let i = 0; i < totalColumns; i++) {
+    let letter = "";
+
+    for (let j = i; j >= 0; j = Math.floor(j / 26) - 1) {
+      letter = String.fromCharCode(65 + (j % 26)) + letter;
+    }
+
+    letters.push(letter);
+  }
+
+  return letters;
 }
