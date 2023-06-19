@@ -1,8 +1,10 @@
 import { evaluate } from "mathjs";
 
-//make it so I can add rows and columns separately
-export const ROWS = 4;
-export const COLUMNS = 4;
+const ROWCOLSIZE = 50;
+
+// As of right now these must be a square
+export const ROWS = ROWCOLSIZE;
+export const COLUMNS = ROWCOLSIZE;
 
 // Converts header uppercase letter to column number
 // Ex: A => 0, B => 1, C => 2, ..., Z => 25, AA => 26, AB => 27, ...

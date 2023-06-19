@@ -1,4 +1,4 @@
-import { Component, createSignal, createEffect, onCleanup, onMount, createMemo, Show } from "solid-js";
+import { Component, createSignal, createEffect, onCleanup, onMount, Show } from "solid-js";
 import { useSpreadsheetContext } from "./SpreadsheetProvider";
 import { evaluateExpression, getCellIndex } from "../utils/SpreadsheetUtils";
 
@@ -10,18 +10,14 @@ interface CellProps {
 const Cell: Component<CellProps> = (props) => {
   const [showInput, setShowInput] = createSignal(false);
   const { cellValues, cellValuesComputed, updateCellValue, updateCellValueComputed } = useSpreadsheetContext();
+
   const cellIndex = getCellIndex(props.row, props.column);
-  // createEffect(() => {
-  //   console.log("rendering cell: ", cellIndex, ":", cellValues[cellIndex]);
-  // });
-  // createEffect(() => {
-  //   console.log("computed: ", cellIndex, ":", cellValuesComputed[cellIndex]);
-  // });
+
   let inputRef: HTMLInputElement | undefined = undefined;
 
   const evaluateCellValue = (value: string) => {
     if (value.startsWith("=")) {
-      const expression = value.substring(1);
+      const expression = value.substring(1).toUpperCase();
       const evaluatedExpression = evaluateExpression(expression, cellValuesComputed);
 
       updateCellValueComputed(cellIndex, evaluatedExpression);
@@ -46,10 +42,7 @@ const Cell: Component<CellProps> = (props) => {
   }
 
   createEffect(() => {
-    // const d4Idx = getCellIndex(3, 3);
-    // const d3Idx = getCellIndex(2, 3);
-    // const ignore = cellValues[d4Idx] + cellValues[d3Idx];
-    evaluateCellValue(cellValues[cellIndex].toUpperCase());
+    evaluateCellValue(cellValues[cellIndex]);
     console.log("cell: ", cellIndex);
   });
 

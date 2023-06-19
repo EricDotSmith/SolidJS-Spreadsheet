@@ -11,9 +11,10 @@ const ColumnHeaders: Component<ColumnHeadersProps> = (props) => {
   });
 
   return (
-    <div class="flex">
+    <div class="flex sticky top-0 z-10">
       {/* spacer */}
-      <div class="bg-gray-500 text-gray-100 border-gray-700 border min-w-[2rem] h-6"></div>
+      <div class="bg-gray-500 text-gray-100 border-gray-700 border min-w-[2rem] h-6 fixed"></div>
+      <div class="ml-8"></div>
       <For each={list()}>
         {(item) => (
           <div class="bg-gray-500 text-gray-100 border-gray-700 flex border min-w-[8rem] h-6 items-center justify-center">

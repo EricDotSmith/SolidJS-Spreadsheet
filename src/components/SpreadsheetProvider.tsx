@@ -14,7 +14,10 @@ interface SpreadsheetProviderContextState {
 const SpreadsheetContext = createContext<SpreadsheetProviderContextState>({} as SpreadsheetProviderContextState);
 
 export const SpreadsheetProvider: Component<{ children: JSX.Element }> = (props) => {
+  // Used for easy rendering of the spreadsheet
   const [cells, setCells] = createStore<string[][]>(new Array(ROWS).fill(new Array(COLUMNS).fill("")));
+
+  // Store the cell values in a flat array
   const [cellValues, setCellValues] = createStore<string[]>(new Array(ROWS * COLUMNS).fill(""));
   const [cellValuesComputed, setCellValuesComputed] = createStore<string[]>(new Array(ROWS * COLUMNS).fill(""));
 
