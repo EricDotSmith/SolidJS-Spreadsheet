@@ -1,9 +1,7 @@
 import { createContext, Component, useContext } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 import { createStore } from "solid-js/store";
-
-export const ROWS = 4;
-export const COLUMNS = 4;
+import { COLUMNS, ROWS } from "../utils/SpreadsheetUtils";
 
 interface SpreadsheetProviderContextState {
   cells: string[][];
