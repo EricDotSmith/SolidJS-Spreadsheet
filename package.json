@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@tanstack/solid-query": "^4.29.14",
+    "mathjs": "^11.8.1",
     "solid-js": "^1.6.10"
   }
 }
