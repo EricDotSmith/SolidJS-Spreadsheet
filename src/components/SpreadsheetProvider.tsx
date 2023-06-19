@@ -21,6 +21,18 @@ export const SpreadsheetProvider: Component<{ children: JSX.Element }> = (props)
   const [cellValues, setCellValues] = createStore<string[]>(new Array(ROWS * COLUMNS).fill(""));
   const [cellValuesComputed, setCellValuesComputed] = createStore<string[]>(new Array(ROWS * COLUMNS).fill(""));
 
+  setCellValues(0, "CREATED BY");
+  setCellValues(COLUMNS, "@ericdotsmith");
+
+  setCellValues(1, "USING");
+  setCellValues(COLUMNS + 1, "SolidJS");
+
+  setCellValues(2, "GITHUB");
+  setCellValues(COLUMNS + 2, "link:https://github.com/EricDotSmith/SolidJS-Spreadsheet");
+
+  setCellValues(3, "LINKEDIN");
+  setCellValues(COLUMNS + 3, "link:https://www.linkedin.com/in/ericdotsmith");
+
   const updateCellValue = (index: number, value: string) => {
     setCellValues(index, value);
   };

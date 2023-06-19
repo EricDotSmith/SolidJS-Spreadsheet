@@ -1,4 +1,4 @@
-import { Component, createSignal, createEffect, onCleanup, onMount, Show } from "solid-js";
+import { Component, createSignal, createEffect, onCleanup, onMount, Show, createMemo } from "solid-js";
 import { useSpreadsheetContext } from "./SpreadsheetProvider";
 import { evaluateExpression, getCellIndex } from "../utils/SpreadsheetUtils";
 
@@ -28,7 +28,7 @@ const Cell: Component<CellProps> = (props) => {
     updateCellValueComputed(cellIndex, value);
   };
 
-  //TODO: this gets registered on too many things
+  //TODO: This gets registered on too many times
   // Function to handle outside click
   function handleOutsideClick(event: MouseEvent) {
     // console.log("handleOutsideClick");
@@ -54,9 +54,23 @@ const Cell: Component<CellProps> = (props) => {
     window.addEventListener("click", handleOutsideClick);
   });
 
+  const gitLink = "link:https://github.com/EricDotSmith/SolidJS-Spreadsheet";
+  const linkedInLink = "link:https://www.linkedin.com/in/ericdotsmith";
+  const isGitLink = createMemo(() => {
+    return cellValues[cellIndex] === gitLink || cellValues[cellIndex] === linkedInLink;
+  });
+
   return (
     <>
-      <Show when={!showInput()}>
+      <Show when={isGitLink()}>
+        <a
+          href={cellValues[cellIndex].substring(5)}
+          class="bg-gray-100 border-gray-700 flex border min-w-[8rem] h-6 items-center justify-center focus:border-blue-500 focus:border-2 focus:rounded-none focus:outline-none hover:text-blue-500"
+        >
+          Click here
+        </a>
+      </Show>
+      <Show when={!showInput() && !isGitLink()}>
         <button
           ondblclick={() => {
             setShowInput(true);

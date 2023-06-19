@@ -17,7 +17,7 @@ const ColumnHeaders: Component<ColumnHeadersProps> = (props) => {
       <div class="ml-8"></div>
       <For each={list()}>
         {(item) => (
-          <div class="bg-gray-500 text-gray-100 border-gray-700 flex border min-w-[8rem] h-6 items-center justify-center">
+          <div class="bg-sky-700 text-gray-100 border-gray-700 flex border min-w-[8rem] h-6 items-center justify-center">
             {item}
           </div>
         )}

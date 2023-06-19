@@ -14,7 +14,7 @@ const RowHeaders: Component<RowHeadersProps> = (props) => {
     <div class="flex flex-col sticky left-0">
       <For each={list()}>
         {(item) => (
-          <div class="bg-gray-500 text-gray-100 border-gray-700 flex border w-8 h-6 items-center justify-center">
+          <div class="bg-sky-600 text-gray-100 border-gray-700 flex border w-8 h-6 items-center justify-center">
             {item}
           </div>
         )}

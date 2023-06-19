@@ -11,7 +11,9 @@ const Sheet: Component = () => {
       <ColumnHeaders columns={cells[0].length} />
       <div class="flex w-fit">
         <RowHeaders rows={cells.length} />
-        {/* naming of rowIndex and colIndex mixed up I think */}
+        {
+          //TODO: naming of rowIndex and colIndex mixed up I think
+        }
         <For each={cells}>
           {(row, colIndex) => (
             <div>
