@@ -28,7 +28,7 @@ const Cell: Component<CellProps> = (props) => {
     updateCellValueComputed(cellIndex, value);
   };
 
-  //TODO: This gets registered on too many times
+  //TODO: (Refactor) This gets registered too many times
   // Function to handle outside click
   function handleOutsideClick(event: MouseEvent) {
     // console.log("handleOutsideClick");
